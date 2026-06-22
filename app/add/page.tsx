@@ -19,7 +19,7 @@ export default function AddPage() {
   useEffect(() => {
     fetch("/api/categories")
       .then((r) => r.json())
-      .then((d) => setCategories(d.data));
+      .then((d) => setCategories(Array.isArray(d.data) ? d.data : []));
   }, []);
 
   const formatRupiahInput = (value: string): string => {

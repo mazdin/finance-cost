@@ -31,9 +31,9 @@ export default function DashboardPage() {
       const txnData = await txnRes.json();
       const catData = await catRes.json();
 
-      setReport(reportData.data);
-      setTransactions(txnData.data);
-      setCategories(catData.data);
+      setReport(reportData.data || null);
+      setTransactions(Array.isArray(txnData.data) ? txnData.data : []);
+      setCategories(Array.isArray(catData.data) ? catData.data : []);
     } catch (err) {
       console.error("Failed to fetch dashboard data", err);
     } finally {
@@ -43,7 +43,7 @@ export default function DashboardPage() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  const catMap = new Map(categories.map((c: any) => [c.id, c]));
+  const catMap = new Map((categories || []).map((c: any) => [c.id, c]));
 
   const filteredTxns = transactions.filter((t: any) =>
     !search || t.storeName.toLowerCase().includes(search.toLowerCase()) ||

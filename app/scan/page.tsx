@@ -31,7 +31,7 @@ export default function ScanPage() {
 
     const catRes = await fetch("/api/categories");
     const catData = await catRes.json();
-    setCategories(catData.data);
+    setCategories(Array.isArray(catData.data) ? catData.data : []);
 
     setForm({
       storeName: result.storeName || "",

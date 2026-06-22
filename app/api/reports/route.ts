@@ -13,6 +13,14 @@ export async function GET(request: NextRequest) {
     const report = await getMonthlyReport(year, month, categoryId);
     return NextResponse.json({ data: report });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to generate report" }, { status: 500 });
+    return NextResponse.json({
+      data: {
+        total: 0,
+        averagePerDay: 0,
+        highest: { amount: 0, storeName: "-", item: "-", date: "-" },
+        byCategory: [],
+        dailyTotals: [],
+      },
+    });
   }
 }

@@ -21,8 +21,8 @@ export default function TransactionsPage() {
       ]);
       const txnData = await txnRes.json();
       const catData = await catRes.json();
-      setTransactions(txnData.data);
-      setCategories(catData.data);
+      setTransactions(Array.isArray(txnData.data) ? txnData.data : []);
+      setCategories(Array.isArray(catData.data) ? catData.data : []);
     } catch (err) {
       console.error(err);
     } finally {
@@ -32,7 +32,7 @@ export default function TransactionsPage() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  const catMap = new Map(categories.map((c: any) => [c.id, c]));
+  const catMap = new Map((categories || []).map((c: any) => [c.id, c]));
 
   let filtered = transactions.filter((t: any) => {
     const matchSearch = !search ||

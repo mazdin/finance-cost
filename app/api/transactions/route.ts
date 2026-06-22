@@ -26,9 +26,9 @@ export async function GET(request: NextRequest) {
       .where(conditions)
       .orderBy(desc(transactions.date));
 
-    return NextResponse.json({ data });
+    return NextResponse.json({ data: data || [] });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch transactions" }, { status: 500 });
+    return NextResponse.json({ data: [] });
   }
 }
 
