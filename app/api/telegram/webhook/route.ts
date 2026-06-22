@@ -69,6 +69,10 @@ async function ensureCategoriesExist() {
   }
 }
 
+const BASE_URL = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "http://localhost:3000";
+
 export async function POST(request: NextRequest) {
   try {
     const secretToken = request.headers.get("X-Telegram-Bot-Api-Secret-Token");
@@ -89,7 +93,7 @@ export async function POST(request: NextRequest) {
     if (photo) {
       const fileId = photo[photo.length - 1].file_id;
       const fileUrl = await getFileUrl(fileId);
-      await sendMessage(chatId, `Terima kasih! Foto struk diterima. Sayangnya, OCR hanya berfungsi di browser. Silakan buka portal web untuk meng-upload dan memproses foto ini.\n\nLink: https://at-finance-cost.vercel.app/scan`);
+      await sendMessage(chatId, `Terima kasih! Foto struk diterima. Sayangnya, OCR hanya berfungsi di browser. Silakan buka portal web untuk meng-upload dan memproses foto ini.\n\nLink: ${BASE_URL}/scan`);
       return NextResponse.json({ ok: true });
     }
 
