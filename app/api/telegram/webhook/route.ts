@@ -5,6 +5,10 @@ import { sendMessage, formatRupiah, parseTelegramAmount, getFileUrl } from "@/li
 import { getMonthlyReport } from "@/lib/reports";
 import { eq, desc } from "drizzle-orm";
 
+export async function GET() {
+  return NextResponse.json({ ok: true, message: "Telegram webhook endpoint active" });
+}
+
 const HELP_TEXT = `Halo! Saya asisten pencatat keuangan kamu.
 
 <b>Perintah:</b>
