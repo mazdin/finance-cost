@@ -37,24 +37,35 @@ export default function MonthlyChart({ dailyTotals, byCategory }: MonthlyChartPr
     total: d.total,
   }));
 
-  const pieData = byCategory.map((c) => ({
+  const hasBarData = barData.length > 0;
+
+  const chartData = byCategory.map((c) => ({
     name: `${c.icon} ${c.name}`,
     value: c.total,
     color: c.color,
   }));
 
+  const hasPieData = chartData.length > 0;
+  const pieSource = hasPieData ? chartData : [{ name: "Belum ada data", value: 1, color: "#eee" }];
+
   return (
     <div className="charts-grid">
       <div className="chart-card glass">
         <h3 className="chart-title">Pengeluaran per Hari</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={barData.length > 0 ? barData : [{ date: "-", total: 0 }]}>
-            <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-            <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip formatter={(value: number) => [`Rp ${value.toLocaleString("id-ID")}`, "Total"]} />
-            <Bar dataKey="total" fill="#4ECDC4" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+        {hasBarData ? (
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={barData}>
+              <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+              <YAxis tick={{ fontSize: 12 }} />
+              <Tooltip formatter={(value: number) => [`Rp ${value.toLocaleString("id-ID")}`, "Total"]} />
+              <Bar dataKey="total" fill="#4ECDC4" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        ) : (
+          <div style={{ height: 300, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-secondary)" }}>
+            Belum ada data
+          </div>
+        )}
       </div>
 
       <div className="chart-card glass">
@@ -62,20 +73,20 @@ export default function MonthlyChart({ dailyTotals, byCategory }: MonthlyChartPr
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Pie
-              data={pieData.length > 0 ? pieData : [{ name: "Belum ada data", value: 1, color: "#eee" }]}
+              data={pieSource}
               dataKey="value"
               nameKey="name"
               cx="50%"
               cy="50%"
               outerRadius={100}
-              label={({ name }) => name}
+              label={hasPieData ? ({ name }) => name : undefined}
             >
-              {pieData.map((entry, index) => (
+              {pieSource.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
             <Tooltip formatter={(value: number) => [`Rp ${value.toLocaleString("id-ID")}`, "Total"]} />
-            <Legend />
+            {hasPieData && <Legend />}
           </PieChart>
         </ResponsiveContainer>
       </div>
